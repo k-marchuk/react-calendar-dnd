@@ -6,9 +6,7 @@ import AddButton from './../assets/add_circle.svg';
 const AddCircleIcon = styled.img`
   width: 20px;
   height: 20px;
-  position: absolute;
-  left: 85%;
-  top: 7px;
+  margin-left: auto;
   opacity: 0;
   transition: opacity 0.5s ease;
 `;

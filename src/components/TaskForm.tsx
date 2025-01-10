@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 
 import styled from 'styled-components';
 
-const TaskForm = styled.form`
+const Form = styled.form`
   display: flex;
   gap: 2px;
   position: relative;
-  top: 24px;
   transition: opacity 0.5s ease;
 `;
 
@@ -22,30 +21,53 @@ const StyledInput = styled.input`
   outline: 0;
 `;
 
+const StyledButton = styled.button`
+  display: flex;
+  background-color: transparent;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 2px;
+
+  & span {
+    font-size: 16px;
+  }
+`;
+
 type Props = {
   onSubmit: (taskDescription: string) => void;
   onReset: () => void;
+  defaultValue?: string;
 };
 
-const NewTaskForm: React.FC<Props> = ({ onSubmit, onReset }) => {
-  const [taskDescription, setTaskDescription] = useState<string>('');
+const TaskForm: React.FC<Props> = ({
+  onSubmit,
+  onReset,
+  defaultValue = '',
+}) => {
+  const [taskDescription, setTaskDescription] = useState<string>(defaultValue);
 
   return (
-    <TaskForm
+    <Form
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(taskDescription);
       }}
     >
       <StyledInput
+        autoFocus
         value={taskDescription}
         onChange={(e) => setTaskDescription(e.target.value)}
         placeholder="Type your task..."
+        required
       />
-      <button type="submit">✅</button>
-      <div onClick={onReset}>❌</div>
-    </TaskForm>
+      <StyledButton type="submit">
+        <span className="material-symbols-outlined">check</span>
+      </StyledButton>
+      <StyledButton onClick={onReset}>
+        <span className="material-symbols-outlined">close</span>
+      </StyledButton>
+    </Form>
   );
 };
 
-export default NewTaskForm;
+export default TaskForm;

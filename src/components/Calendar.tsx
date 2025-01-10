@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 
 import CalendarDay from './CalendarDay';
-import ToggleUpButton from './ToggleUpButton';
-import ToggleDownButton from './ToggleDownButton';
 import { generateCalendar } from '../helpers/generateCalendar';
 import { Day } from '../types/Date';
 import CalendarEmptyDay from './CalendarEmptyDay';
-import { Task } from '../types/Task';
+import { EventType, Task } from '../types/Task';
+import MonthNavigationButton from './MonthNavigationButton';
+import { Holiday } from '../types/Holiday';
+import { fetchWorldwideHolidays } from '../api/api';
 
 const CalendarContainer = styled.div`
   background-color: #edeff1;
@@ -29,6 +30,18 @@ const MonthsToggle = styled.div`
   display: flex;
   gap: 6px;
   width: max-content;
+`;
+
+const StyledInputSearch = styled.input`
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding-inline: 4px;
+  min-width: 200px;
+`;
+
+const StyledFilterIcon = styled.span`
+  display: flex;
+  padding: 6px;
 `;
 
 const CurrentMonth = styled.span`
@@ -76,23 +89,36 @@ const TodayButton = styled.div`
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Calendar: React.FC = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [chosenDay, setChosenDay] = useState<Day | null>(null);
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [editedTaskId, setEditedTaskId] = useState<string | null>(null);
+  const [query, setQuery] = useState<string>('');
+  const [holidays, setHolidays] = useState<Holiday[] | undefined>([]);
+  const [tasks, setTasks] = useState<Omit<Task[], 'type'>>([]);
 
-  const year = currentMonth.getFullYear();
-  const month = currentMonth.getMonth();
+  const year = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
 
-  const firstDayOfMonth = new Date(year, month, 1);
+  const firstDayOfMonth = new Date(year, currentMonth, 1);
   const startingDayIndex = firstDayOfMonth.getDay();
 
-  const daysInMonth = generateCalendar(currentMonth);
+  const daysInMonth = generateCalendar(currentDate);
 
   const changeMonth = (increment: number) => {
-    const newDate = new Date(currentMonth);
-    newDate.setMonth(currentMonth.getMonth() + increment);
-    setCurrentMonth(newDate);
+    const newDate = new Date(currentDate);
+    newDate.setMonth(currentDate.getMonth() + increment);
+    setCurrentDate(newDate);
+    setChosenDay(null);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchWorldwideHolidays();
+      setHolidays(data);
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const storedTasks = localStorage.getItem('tasks');
@@ -100,8 +126,8 @@ const Calendar: React.FC = () => {
     if (storedTasks) {
       try {
         setTasks(JSON.parse(storedTasks));
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        window.alert(`Unable to get data from localstorage, ${error}`);
       }
     }
   }, []);
@@ -113,40 +139,109 @@ const Calendar: React.FC = () => {
   }, [tasks]);
 
   const addNewTask = (task: Omit<Task, 'id'>) => {
-    setTasks((currentTasks) => [...currentTasks, { ...task, id: uuidv4() }]);
+    const newTasks = [...tasks, { ...task, id: uuidv4() }];
+
+    setTasks(newTasks);
+  };
+
+  const editTask = (newDescription: string, id: string) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, description: newDescription };
+      } else {
+        return task;
+      }
+    });
+
+    setTasks(newTasks);
+  };
+
+  const deleteTask = (id: string) => {
+    const newTasks = tasks.filter((task) => task.id !== id);
+
+    setTasks(newTasks);
   };
 
   const preparedEventsForDay = useMemo(() => {
+    const preparedHolidays = holidays?.reduce((acc, event) => {
+      const [year, month, day] = event.date.split('-');
+
+      if (currentMonth + 1 !== +month) {
+        return acc;
+      }
+
+      const holiday: Task = {
+        id: uuidv4(),
+        description: event.name,
+        date: {
+          day: +day,
+          month: +month,
+          year: +year,
+        },
+        type: EventType.Holiday,
+      };
+
+      if (acc[holiday.date.day]) {
+        acc[holiday.date.day].push(holiday);
+      } else {
+        acc[holiday.date.day] = [holiday];
+      }
+
+      return acc;
+    }, {} as { [key: number]: Task[] });
+
     return tasks
-      .filter(({ date }) => date.month === month) //TODO filter by query here
+      .filter(
+        ({ date, description }) =>
+          date.month === currentMonth && (!query || description.includes(query))
+      )
       .reduce((acc, task) => {
+        const extendedTask = { ...task, type: EventType.Custom };
+
         if (acc[task.date.day]) {
-          acc[task.date.day].push(task);
+          acc[task.date.day].push(extendedTask);
         } else {
-          acc[task.date.day] = [task];
+          acc[task.date.day] = [extendedTask];
         }
 
         return acc;
-      }, {} as { [key: number]: Task[] });
-  }, [month, tasks]);
+      }, preparedHolidays as { [key: number]: Task[] });
+  }, [holidays, tasks, currentMonth, query]);
 
   return (
     <CalendarContainer>
       <CalendarHeader>
-        <TodayButton onClick={() => setCurrentMonth(new Date())}>
+        <TodayButton onClick={() => setCurrentDate(new Date())}>
           Today
         </TodayButton>
         <MonthsToggle>
-          <ToggleUpButton onMonthChange={changeMonth}></ToggleUpButton>
-          <ToggleDownButton onMonthChange={changeMonth}></ToggleDownButton>
+          <MonthNavigationButton
+            onMonthChange={changeMonth}
+            direction={'Up'}
+          ></MonthNavigationButton>
+          <MonthNavigationButton
+            onMonthChange={changeMonth}
+            direction={'Down'}
+          ></MonthNavigationButton>
         </MonthsToggle>
 
         <CurrentMonth>
-          {currentMonth.toLocaleDateString('en-GB', {
+          {currentDate.toLocaleDateString('en-GB', {
             month: 'long',
             year: 'numeric',
           })}
         </CurrentMonth>
+        <StyledFilterIcon className="material-symbols-outlined">
+          filter_list
+        </StyledFilterIcon>
+        <StyledInputSearch
+          placeholder="Search by task description..."
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setChosenDay(null);
+            setEditedTaskId(null);
+          }}
+        />
       </CalendarHeader>
 
       <CalendarGrid>
@@ -158,14 +253,20 @@ const Calendar: React.FC = () => {
         })}
         {daysInMonth.map((day) => (
           <CalendarDay
+            editTask={editTask}
+            deleteTask={deleteTask}
+            editedTaskId={editedTaskId}
             key={day.day}
             day={day}
+            setEditedTaskId={setEditedTaskId}
             tasks={preparedEventsForDay[day.day]}
             addNewTask={(description) => {
-              addNewTask({ description, date: day });
+              if (description) {
+                addNewTask({ description, date: day });
+              }
               setChosenDay(null);
             }}
-            isChosenDay={!!chosenDay && chosenDay.day === day.day}
+            isChosenDay={chosenDay?.day === day.day}
             handleFormClose={() => setChosenDay(null)}
             handleCurrentDayChange={() => setChosenDay(day)}
           />
