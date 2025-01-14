@@ -44,8 +44,9 @@ const useCalendarController = (resetActiveForm: () => void) => {
       } catch (error) {
         window.alert(`Unable to get data from localstorage, ${error}`);
       }
-      setHasStorageRead(true);
     }
+
+    setHasStorageRead(true);
   }, []);
 
   useEffect(() => {
