@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ActiveDay, Day } from '../types/Date';
+import { ActiveDay, Day } from '@src/types/Date';
 import { UniqueIdentifier } from '@dnd-kit/core';
 
 const activeFormDefaultValue = { day: null, taskId: null };

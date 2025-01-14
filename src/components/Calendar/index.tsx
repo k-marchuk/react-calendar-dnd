@@ -1,15 +1,14 @@
 import React from 'react';
-
-import CalendarDay from '../CalendarDay';
-import CalendarEmptyDay from '../CalendarEmptyDay';
-import MonthNavigationButton from '../MonthNavigationButton';
 import {
   defaultDropAnimation,
   defaultDropAnimationSideEffects,
   DndContext,
   DragOverlay,
 } from '@dnd-kit/core';
-import TaskCard from '../TaskCard';
+import TaskCard from '@src/components/TaskCard';
+import CalendarDay from '@src/components/CalendarDay';
+import CalendarEmptyDay from '@src/components/CalendarEmptyDay';
+import MonthNavigationButton from '@src/components/MonthNavigationButton';
 import {
   CalendarContainer,
   CalendarGrid,
@@ -22,10 +21,11 @@ import {
   TodayButton,
   Weekday,
 } from './style';
-import { WEEKDAYS } from '../../helpers/weekdays';
-import useCalendarController from '../../hooks/useCalendarController';
-import useActiveForm from '../../hooks/useActiveForm';
-import useDragEventHandlers from '../../hooks/useDragEventHandlers';
+import { Direction } from '@src/types/Direction';
+import { WEEKDAYS } from '@src/helpers/weekdays';
+import useActiveForm from '@src/hooks/useActiveForm';
+import useCalendarController from '@src/hooks/useCalendarController';
+import useDragEventHandlers from '@src/hooks/useDragEventHandlers';
 
 const Calendar: React.FC = () => {
   const { activeForm, setActiveFormDay, setActiveFormTaskId, resetActiveForm } =
@@ -63,12 +63,12 @@ const Calendar: React.FC = () => {
         <MonthsToggle>
           <MonthNavigationButton
             onMonthChange={changeMonth}
-            direction={'Up'}
-          ></MonthNavigationButton>
+            direction={Direction.Up}
+          />
           <MonthNavigationButton
             onMonthChange={changeMonth}
-            direction={'Down'}
-          ></MonthNavigationButton>
+            direction={Direction.Down}
+          />
         </MonthsToggle>
 
         <CurrentMonth>{calendarMonthTitle}</CurrentMonth>
@@ -76,6 +76,7 @@ const Calendar: React.FC = () => {
           search
         </StyledFilterIcon>
         <StyledInputSearch
+          value={query}
           placeholder="Search by task description..."
           onChange={(event) => {
             setQuery(event.target.value);

@@ -1,4 +1,4 @@
-import { HolidayResponse } from '../types/Holiday';
+import { HolidayResponse } from '@src/types/Holiday';
 
 const API_URL: string =
   'https://date.nager.at/api/v3/NextPublicHolidaysWorldwide';

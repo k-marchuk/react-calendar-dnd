@@ -1,7 +1,7 @@
 import { DragOverEvent, DragStartEvent } from '@dnd-kit/core';
-import { HolidayEvent, Task } from '../types/Task';
+import { HolidayEvent, Task } from '@src/types/Task';
 import { useState } from 'react';
-import sortBySortIndex from '../helpers/sortBySortIndex';
+import sortBySortIndex from '@src/helpers/sortBySortIndex';
 
 const useDragEventHandlers = (
   sourceTasks: Task[],

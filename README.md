@@ -1,50 +1,40 @@
-# React + TypeScript + Vite
+[CALENDAR DEMO](https://react-calendar-dnd.vercel.app/)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple interactive calendar designed to help users create, edit, delete and orginize tasks.
 
-Currently, two official plugins are available:
+Tasks can be easily rearranged between days and reordered within the same day through drag and drop functionality.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The app also includes a search filter to quickly find tasks and displays worldwide holidays for each day.
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **React**
+- **TypeScript**
+- **dnd kit**
+- **Styled components**
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+To get started with this project, follow the steps below:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/k-marchuk/react-calendar-dnd.git
+   ```
+2. **Navigate into the project directory:**:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+   ```bash
+   cd react-calendar-dnd
+   ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+3. **Install dependencies:**:
+
+   ```bash
+   npm install
+   ```
+
+4. **Start the development server:**:
+   ```bash
+   npm run dev
+   ```
+   This will run the app on http://localhost:5173.

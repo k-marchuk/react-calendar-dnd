@@ -1,4 +1,4 @@
-import { Day } from '../types/Date';
+import { Day } from '@src/types/Date';
 
 export const generateCalendar = (date: Date) => {
   const year = date.getFullYear();

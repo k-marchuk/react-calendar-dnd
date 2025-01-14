@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { UniqueIdentifier } from '@dnd-kit/core';
-import { generateCalendar } from '../helpers/generateCalendar';
-
-import { EventType, HolidayEvent, Task } from '../types/Task';
-import { HolidayResponse } from '../types/Holiday';
-import { fetchWorldwideHolidays } from '../api/api';
-import { Day } from '../types/Date';
-import sortBySortIndex from '../helpers/sortBySortIndex';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { generateCalendar } from '@src/helpers/generateCalendar';
+import sortBySortIndex from '@src/helpers/sortBySortIndex';
+import { EventType, HolidayEvent, Task } from '@src/types/Task';
+import { HolidayResponse } from '@src/types/Holiday';
+import { fetchWorldwideHolidays } from '@src/api/api';
+import { Day } from '@src/types/Date';
 
 const useCalendarController = (resetActiveForm: () => void) => {
   const [tasks, setTasks] = useState<Task[]>([]);

@@ -26,8 +26,7 @@ export const StyledInputSearch = styled.input`
   border-radius: 4px;
   padding-inline: 4px;
   min-width: 200px;
-  margin-right: 4px;
-  padding-right: 34px;
+  padding-right: 30px;
 `;
 
 export const StyledFilterIcon = styled.span`
@@ -60,7 +59,7 @@ export const StyledCloseButton = styled.button`
   border: 1px solid gray;
   border-radius: 4px;
   padding: 2px;
-  margin-left: -34px;
+  margin-left: -30px;
 `;
 
 export const TodayButton = styled.div`

@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import React from 'react';
-import { HolidayEvent, Task } from '../../types/Task';
+import { HolidayEvent, Task } from '@src/types/Task';
 import { StyledCard, StyledIcon, StyledText, CardActions } from './style';
 
 type Props = {

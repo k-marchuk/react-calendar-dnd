@@ -1,10 +1,10 @@
-import AddTaskButton from '../AddTaskButton';
+import AddTaskButton from '@src/components/AddTaskButton';
 import React from 'react';
-import { ActiveDay, Day } from '../../types/Date';
-import CalendarDayCell from '../CalendarDayCell';
-import { EventType, Task } from '../../types/Task';
-import { type HolidayEvent as Holiday } from '../../types/Task';
-import TaskCard from '../TaskCard';
+import { ActiveDay, Day } from '@src/types/Date';
+import CalendarDayCell from '@src/components/CalendarDayCell';
+import { EventType, Task } from '@src/types/Task';
+import { type HolidayEvent as Holiday } from '@src/types/Task';
+import TaskCard from '@src/components/TaskCard';
 import { UniqueIdentifier, useDroppable } from '@dnd-kit/core';
 import {
   CardsCount,
@@ -16,7 +16,7 @@ import {
   StyledIcon,
   StyledText,
 } from './style';
-import TaskForm from '../TaskForm';
+import TaskForm from '@src/components/TaskForm';
 
 type Props = {
   day: Day;
@@ -55,6 +55,46 @@ const CalendarDay: React.FC<Props> = ({
   });
 
   const customTasks = tasks?.filter((task) => task.type === EventType.Custom);
+  const holidayEvents = tasks?.filter(
+    (task) => task.type === EventType.Holiday
+  );
+
+  const getHolidaysEvents = () =>
+    holidayEvents?.map(({ description, id }) => {
+      return (
+        <HolidayEvent key={id}>
+          <StyledText>{description}</StyledText>
+          <StyledIcon className="material-symbols-outlined">
+            celebration
+          </StyledIcon>
+        </HolidayEvent>
+      );
+    });
+
+  const getCustomTasks = () =>
+    customTasks?.map((task) =>
+      activeDay.taskId !== task.id ? (
+        <TaskCard
+          key={task.id}
+          task={task}
+          isDragging={task.id === dragTaskId}
+          onTaskDelete={() => deleteTask(task.id)}
+          onTaskEdit={() => {
+            setActiveFormTaskId(task.id);
+          }}
+        />
+      ) : (
+        <TaskForm
+          key={task.id}
+          defaultValue={task.description}
+          onReset={resetActiveForm}
+          onSubmit={(newDescription) => {
+            updateTask(newDescription, task.id);
+            resetActiveForm();
+          }}
+        />
+      )
+    );
 
   return (
     <CalendarDayCell>
@@ -75,47 +115,8 @@ const CalendarDay: React.FC<Props> = ({
       </DayHeader>
       <DayBody ref={setNodeRef} $isOver={isOver}>
         <InnerDiv>
-          {!!tasks?.length &&
-            tasks?.map(({ description, id, type }) => {
-              if (type === EventType.Holiday) {
-                return (
-                  <HolidayEvent key={id}>
-                    <StyledText>{description}</StyledText>
-                    <StyledIcon className="material-symbols-outlined">
-                      celebration
-                    </StyledIcon>
-                  </HolidayEvent>
-                );
-              }
-              return false;
-            })}
-
-          {tasks
-            ?.filter((task) => task.type === EventType.Custom)
-            .map((task) =>
-              activeDay.taskId !== task.id ? (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  isDragging={task.id === dragTaskId}
-                  onTaskDelete={() => deleteTask(task.id)}
-                  onTaskEdit={() => {
-                    setActiveFormTaskId(task.id);
-                  }}
-                />
-              ) : (
-                <TaskForm
-                  key={task.id}
-                  defaultValue={task.description}
-                  onReset={resetActiveForm}
-                  onSubmit={(newDescription) => {
-                    updateTask(newDescription, task.id);
-                    resetActiveForm();
-                  }}
-                />
-              )
-            )}
-
+          {getHolidaysEvents()}
+          {getCustomTasks()}
           {isChosenDay && !activeDay.taskId && (
             <TaskForm
               onSubmit={handleNewTaskSubmit}
