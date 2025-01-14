@@ -54,13 +54,15 @@ const CalendarDay: React.FC<Props> = ({
     },
   });
 
+  const customTasks = tasks?.filter((task) => task.type === EventType.Custom);
+
   return (
     <CalendarDayCell>
       <DayHeader>
         <DayNumber>{day.day}</DayNumber>
-        {!!tasks?.length && (
+        {!!customTasks?.length && (
           <CardsCount>
-            {tasks?.length === 1 ? '1 card' : `${tasks?.length} cards`}
+            {customTasks?.length === 1 ? '1 card' : `${tasks?.length} cards`}
           </CardsCount>
         )}
         {!isChosenDay && (

@@ -26,6 +26,8 @@ export const StyledInputSearch = styled.input`
   border-radius: 4px;
   padding-inline: 4px;
   min-width: 200px;
+  margin-right: 4px;
+  padding-right: 34px;
 `;
 
 export const StyledFilterIcon = styled.span`
@@ -49,6 +51,16 @@ export const CalendarGrid = styled.div`
   grid-template-columns: repeat(7, minmax(0, 1fr));
   grid-gap: 6px;
   padding: 10px;
+`;
+
+export const StyledCloseButton = styled.button`
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 2px;
+  margin-left: -34px;
 `;
 
 export const TodayButton = styled.div`

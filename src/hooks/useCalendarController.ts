@@ -178,6 +178,7 @@ const useCalendarController = (resetActiveForm: () => void) => {
     setToday,
     changeMonth,
     preparedEventsForDay,
+    query,
     setQuery,
     handleNewTaskSubmit,
     updateTask,

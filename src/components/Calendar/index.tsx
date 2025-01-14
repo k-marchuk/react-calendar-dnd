@@ -16,6 +16,7 @@ import {
   CalendarHeader,
   CurrentMonth,
   MonthsToggle,
+  StyledCloseButton,
   StyledFilterIcon,
   StyledInputSearch,
   TodayButton,
@@ -37,6 +38,7 @@ const Calendar: React.FC = () => {
     setToday,
     calendarMonthTitle,
     preparedEventsForDay,
+    query,
     setQuery,
     handleNewTaskSubmit,
     updateTask,
@@ -80,6 +82,12 @@ const Calendar: React.FC = () => {
             resetActiveForm();
           }}
         />
+        {query && (
+          <StyledCloseButton onClick={() => setQuery('')}>
+            {' '}
+            <span className="material-symbols-outlined">close</span>
+          </StyledCloseButton>
+        )}
       </CalendarHeader>
 
       <CalendarGrid>
