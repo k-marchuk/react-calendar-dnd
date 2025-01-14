@@ -1,6 +1,5 @@
 #root {
   padding: 1rem;
-  text-align: center;
 }
 
 body {
@@ -9,4 +8,5 @@ body {
   padding: 0;
   background-color: rgba(255, 164, 44, 0.822);
   height: 100vh;
+  min-width: 800px;
 }

@@ -1,4 +1,4 @@
-export interface Holiday {
+export interface HolidayResponse {
   date: string;
   localName: string;
   name: string;
