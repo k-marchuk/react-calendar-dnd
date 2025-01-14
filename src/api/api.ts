@@ -1,10 +1,10 @@
-import { Holiday } from '../types/Holiday';
+import { HolidayResponse } from '../types/Holiday';
 
 const API_URL: string =
   'https://date.nager.at/api/v3/NextPublicHolidaysWorldwide';
 
 export const fetchWorldwideHolidays = async (): Promise<
-  Holiday[] | undefined
+  HolidayResponse[] | undefined
 > => {
   try {
     const response = await fetch(API_URL);
