@@ -1,6 +1,6 @@
 [CALENDAR DEMO](https://react-calendar-dnd.vercel.app/)
 
-A simple interactive calendar designed to help users create, edit, delete and orginize tasks.
+A simple interactive calendar designed to help users create, edit, delete and organize tasks.
 
 Tasks can be easily rearranged between days and reordered within the same day through drag and drop functionality.
 
